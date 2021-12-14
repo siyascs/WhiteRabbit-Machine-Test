@@ -99,8 +99,8 @@ class _UserListState extends State<UserList> {
                                   )
                               ),
                               title: Text(
-                                  (value.responseString[index]["name"] != null)
-                                      ? value.responseString[index]["name"]
+                                  (value.responseString[index]["username"] != null)
+                                      ? value.responseString[index]["username"]
                                       : ("")),
                               subtitle: Text(
                                   (value.responseString[index]["company"] != null)
