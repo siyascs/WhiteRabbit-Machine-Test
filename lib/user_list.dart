@@ -51,6 +51,7 @@ class _UserListState extends State<UserList> {
               Consumer<UserProfileProvider>(builder: (context, value, child) {
                 return ListView.builder(
                     shrinkWrap: true,
+                    physics: ClampingScrollPhysics(),
                     itemCount: value.responseString.length,
                     itemBuilder: (context, index) {
                       _insert(
