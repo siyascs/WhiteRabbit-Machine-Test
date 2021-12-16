@@ -16,7 +16,7 @@ class SingleUserProfile extends StatefulWidget {
 class _SingleUserProfileState extends State<SingleUserProfile> {
   final dbHelper = DatabaseHelper.instance;
   String? username;
-  List userData = [];
+  List? _UserData;
 
   @override
   void initState() {
@@ -37,36 +37,46 @@ class _SingleUserProfileState extends State<SingleUserProfile> {
       ),
       body: SingleChildScrollView(
         child: Container(
+        alignment: Alignment.center,
           margin: EdgeInsets.all(15),
-          child: Column(
-            children: [
-              for (int index = 0; index < userData.length; index++)
-                Text(userData[index]["username"],
-                    style: TextStyle(color: blackcolor, fontSize: 14)),
-              SizedBox(height: 15),
-              for (int index = 0; index < userData.length; index++)Text(userData[index]["street"],
-          style: TextStyle(color: blackcolor, fontSize: 14)),
-              SizedBox(height: 15),
-              for (int index = 0; index < userData.length; index++)Text(userData[index]["city"],
-                  style: TextStyle(color: blackcolor, fontSize: 14)),
-              SizedBox(height: 15),
-              for (int index = 0; index < userData.length; index++)Text(userData[index]["phone"],
-                  style: TextStyle(color: blackcolor, fontSize: 14)),
-            ],
-          ),
+          child: ListView.builder(
+            itemCount: _UserData!.length,
+              itemBuilder: (_,int position){
+              return Column(
+                children: [
+                  ClipOval(
+                    child: Image.network(
+                      _UserData![position]["image"],
+                      height: 100,
+                      width: 100,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  Text(_UserData![position]["username"],
+                      style: TextStyle(color: blackcolor, fontSize: 14)),
+                  SizedBox(height: 10),
+                  Text(_UserData![position]["street"],
+                      style: TextStyle(color: blackcolor, fontSize: 14)),
+                  SizedBox(height: 10),
+                  Text(_UserData![position]["city"],
+                      style: TextStyle(color: blackcolor, fontSize: 14)),
+                  SizedBox(height: 10),
+                  Text(_UserData![position]["phone"],
+                      style: TextStyle(color: blackcolor, fontSize: 14)),
+                ],
+              );
+              })
         ),
       ),
     );
   }
 
   Future getUser() async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    int? userid = preferences.getInt("userid");
-    final allRows = await dbHelper.queryRows(userid);
-
-    allRows.forEach(print);
-    userData.add(allRows);
-    return userData;
+    SharedPreferences preferences=await SharedPreferences.getInstance();
+    int? userid=preferences.getInt("userid");
+    _UserData=await dbHelper.queryRows(userid);
+    print(_UserData?[0]["username"]);
   }
 
   Future<bool> _onWillPop() async {
